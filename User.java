@@ -43,8 +43,8 @@
 
     /** If this user follows the given name, returns true; otherwise returns false. */
     public boolean follows(String name) {
-        for (int i = 0; i < this.follows.length ; i ++){
-            if (follows[i].equals(name)){
+        for (int i = 0; i < this.fCount ; i ++){
+            if (follows[i] != null && follows[i].equals(name)){
                 return true;
             }
         }
@@ -53,12 +53,17 @@
     /** Makes this user follow the given name. If successful, returns true. 
      *  If this user already follows the given name, or if the follows list is full, does nothing and returns false; */
     public boolean addFollowee(String name) {
-        if (this.follows(name) == false ){
-            follows [this.fCount] = name;
-            this.fCount ++;
-            return true;
+
+        if (fCount == maxfCount){
+            return false;
         }
-        return false;
+        if (this.follows(name)){
+            return false;
+        }
+        follows [this.fCount] = name;
+        this.fCount ++;
+        return true;
+  
     }
 
     /** Removes the given name from the follows list of this user. If successful, returns true.
@@ -68,17 +73,17 @@
         int counter = 0;
         if (this.follows(name) == true){
 
-            for (int i = 0; i < this.follows.length ; i ++){
+            for (int i = 0; i < this.fCount ; i ++){
                 if (this.follows[i].equals(name)){
                     this.follows[i] = null;
                     counter = i;
                     break;
                 }
             }
-            for (int i = counter; i < this.follows.length - 1 ; i ++){
+            for (int i = counter; i < this.fCount - 1 ; i ++){
                 this.follows[i] = this.follows[i + 1]; 
             } 
-            this.follows[this.follows.length - 1] = null;
+            this.follows[--this.fCount] = null;
             return true;
         }
 
@@ -93,7 +98,7 @@
         for (int i = 0; i < this.fCount ; i ++){
 
             for (int j = 0; j < other.fCount ; j ++){
-                if (this.follows[i].equals(other.follows[j])){
+                if (this.follows[i] != null && this.follows[i].equals(other.follows[j])){
                     counter ++;
                 }
             }
